@@ -1,0 +1,24 @@
+log_level: info
+
+behavior:
+  read_only: false
+  dolt_transaction_commit: false
+
+listener:
+  host: localhost
+  port: 5432
+  read_timeout_millis: 28800000
+  write_timeout_millis: 28800000
+  allow_cleartext_passwords: true
+
+data_dir: data/testing_access_management
+
+cfg_dir: .doltcfg/testing_access_management
+privilege_file: .doltcfg/testing_access_management/privileges.db
+auth_file: .doltcfg/testing_access_management/auth.db
+branch_control_file: .doltcfg/testing_access_management/branch_control.db
+
+metrics:
+  labels: {}
+  host: localhost
+  port: 11228

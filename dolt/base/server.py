@@ -1,9 +1,7 @@
 import os
 import subprocess
-import signal
 import time
 from pathlib import Path
-import psycopg
 
 DIR = Path(__file__).parent
 
@@ -18,19 +16,13 @@ def main():
     proc = subprocess.Popen(["doltgres", "--config", str(DIR / "server.yaml")])
     time.sleep(2)
 
-    conn = psycopg.connect("host=127.0.0.1 user=postgres password=password dbname=postgres")
-    conn.autocommit = True
-    conn.execute("CREATE DATABASE IF NOT EXISTS getting_started")
-    conn.close()
-
     print("server running on localhost:5432")
-    print("databases: postgres, getting_started")
     print("ctrl+c to stop\n")
 
     try:
         proc.wait()
     except KeyboardInterrupt:
-        proc.terminate(),
+        proc.terminate()
         print("\nserver stopped")
 
 if __name__ == "__main__":
