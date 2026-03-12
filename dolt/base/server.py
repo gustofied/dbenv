@@ -1,17 +1,21 @@
-import setup_doltgres
+import os
 import subprocess
 import signal
 import time
+from pathlib import Path
 import psycopg
 
+DIR = Path(__file__).parent
+
 def kill_existing():
-    subprocess.run(["pkill", "-x", "doltgres"], stderr=subprocess.DEVNULL)
+    subprocess.run(["pkill", "-xi", "doltgres"], stderr=subprocess.DEVNULL)
     time.sleep(1)
+    Path("/tmp/.s.PGSQL.5432").unlink(missing_ok=True)
 
 def main():
-    setup_doltgres.install()
+    os.chdir(DIR)
     kill_existing()
-    proc = subprocess.Popen(["doltgres"])
+    proc = subprocess.Popen(["doltgres", "--config", str(DIR / "server.yaml")])
     time.sleep(2)
 
     conn = psycopg.connect("host=127.0.0.1 user=postgres password=password dbname=postgres")
@@ -26,7 +30,7 @@ def main():
     try:
         proc.wait()
     except KeyboardInterrupt:
-        proc.terminate()
+        proc.terminate(),
         print("\nserver stopped")
 
 if __name__ == "__main__":
