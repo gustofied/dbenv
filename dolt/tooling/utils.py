@@ -18,23 +18,3 @@ def pretty(cur):
         print(" | ".join(str(v)[:w].ljust(w) for v, w in zip(r, widths)))
 
 
-def get_memory_mb():
-    try:
-        import httpx
-        r = httpx.get("http://localhost:11228/metrics", timeout=2)
-        for line in r.text.splitlines():
-            if line.startswith("go_memstats_alloc_bytes "):
-                return float(line.split()[-1]) / 1024 / 1024
-    except Exception:
-        pass
-    return None
-
-
-def get_disk_mb(data_name):
-    total = 0
-    data_dir = DIR / f"data/{data_name}"
-    if data_dir.exists():
-        for dirpath, _, filenames in os.walk(data_dir):
-            for f in filenames:
-                total += os.path.getsize(os.path.join(dirpath, f))
-    return total / 1024 / 1024
